@@ -1,0 +1,56 @@
+.navbarContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  background-color: #55bebb;
+}
+
+.navbarTitle {
+  font-weight: 600;
+  font-size: 25px;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+}
+
+.titleContainer {
+  display: flex;
+  margin: auto;
+}
+
+.signinButton {
+  padding: 8px 10px;
+  font-size: 14px;
+  margin: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: green;
+  color: white;
+  cursor: pointer;
+}
+
+.signinButton:hover {
+  box-shadow: 2px 3px 4px -1px rgba(0, 0, 0, 0.44);
+  transition: 200ms;
+}
+
+.rightSideNavbar {
+  display: flex;
+  align-items: center;
+}
+
+.navbarPageLinks {
+  color: white;
+  cursor: pointer;
+  margin: 0px 20px;
+}
+
+.navbarPageLinks:hover {
+  text-decoration: underline;
+}
+
+.navbarLogo {
+  width: 130px;
+  cursor: pointer;
+}

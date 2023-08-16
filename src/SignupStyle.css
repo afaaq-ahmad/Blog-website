@@ -1,0 +1,102 @@
+* {
+  /* background-color: antiquewhite; */
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-color: antiquewhite;
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+}
+
+.heading {
+  text-align: center;
+  font-size: 48px;
+}
+
+.imgContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.formContainer {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
+
+.inputContainer {
+  border: 1px solid black;
+  width: 300px;
+  border-radius: 5px;
+  height: 25px;
+}
+
+.inputWithLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.radioContainer {
+  display: flex;
+  margin: auto;
+  margin-top: 20px;
+  justify-content: space-between;
+}
+
+.radioInput {
+  margin-right: 40px;
+  font-weight: 300;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.buttonContainer input {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: rgb(64, 123, 233);
+  border: none;
+  width: 100px;
+  height: 30px;
+  border-radius: 5px;
+}
+
+.buttonContainer input:hover {
+  box-shadow: 2px 3px 4px -1px rgba(0, 0, 0, 0.44);
+  transition: 200ms;
+}
+
+.otherPageContainer {
+  position: relative;
+  border: 1px solid black;
+  width: 100%;
+}
+
+.otherPage {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  border: 1px solid black;
+  text-align: right;
+  margin: 20px 10px;
+  text-decoration: underline;
+  font-style: italic;
+  /* border: 1px solid black; */
+}
+
+.invalidMessage {
+  text-align: left;
+  margin-left: 115px;
+  color: red;
+  font-style: italic;
+  margin-top: 3px;
+  font-size: 14px;
+}

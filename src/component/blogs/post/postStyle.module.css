@@ -1,0 +1,112 @@
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid black; */
+  margin: auto;
+  align-items: center;
+}
+
+.postPageTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  width: 100%;
+  /* background-color: blue; */
+  color: white;
+  font-size: 20px;
+}
+
+.blogDate {
+  text-align: right;
+  width: 98%;
+  margin-right: 20px;
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 100;
+}
+
+.blogDesc {
+  display: flex;
+  justify-content: center;
+  text-align: justify;
+  width: 100%;
+  /* border: 1px solid black; */
+}
+.blogDesc p {
+  /* border: 1px solid black; */
+  width: 50%;
+  line-height: 25px;
+  padding: 10px;
+  font-size: 18px;
+}
+
+.buttonContainer {
+  display: flex;
+  width: 99%;
+  justify-content: right;
+  /* border: 1px solid black; */
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  /* border: 1px solid black; */
+}
+
+.delete {
+  text-align: center;
+  margin: 10px;
+  outline: 1px solid red;
+  border-radius: 3px;
+  color: red;
+  padding: 7px 5px;
+}
+.edit {
+  text-align: center;
+  margin: 10px;
+  outline: 1px solid grey;
+  border-radius: 3px;
+  color: grey;
+  padding: 7px 15px;
+}
+
+.delete:hover {
+  transition: 150ms;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+}
+
+.edit:hover {
+  transition: 150ms;
+  background-color: grey;
+  color: white;
+  cursor: pointer;
+  box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+}
+
+.authorContainer {
+  display: flex;
+  width: 60%;
+  margin-bottom: 70px;
+}
+
+.authorContainer p {
+  margin-left: 20px;
+  /* width: 55%; */
+  font-style: italic;
+  font-size: 16px;
+  color: rgb(41, 41, 41);
+}
+
+.imageContainer {
+  width: 50%;
+}
+
+.imageContainer img {
+  width: 100%;
+}
