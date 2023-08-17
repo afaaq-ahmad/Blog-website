@@ -11,7 +11,6 @@ import Articles from "./component/article/Articles";
 import CreateArticle from "./CreateArticle";
 import ArticlePost from "./component/article/ArticlePost";
 import Search from "./search/Search";
-import Loader from "./component/loader/Loader";
 
 function App() {
   return (
