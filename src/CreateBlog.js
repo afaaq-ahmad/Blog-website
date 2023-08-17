@@ -32,6 +32,28 @@ const CreateBlog = () => {
     setTimeout(() => toastr.success(`Blogs list updated`, `Success!`), 300);
   };
 
+  const errorNotify = () => {
+    toastr.options = {
+      closeButton: false,
+      debug: false,
+      newestOnTop: false,
+      progressBar: false,
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
+      onclick: null,
+      showDuration: "5000",
+      hideDuration: "1000",
+      timeOut: "3000",
+      extendedTimeOut: "1000",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+    toastr.clear();
+    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
+  };
+
   const [blogData, setBlogData] = useState({
     title: "",
     description: "",
@@ -40,14 +62,20 @@ const CreateBlog = () => {
     image: "",
   });
 
+  const getBlogContent = async () => {
+    try {
+      const getReqToUpdate = await axios.get(
+        `http://localhost:3001/blogs/${id}`
+      );
+      setBlogData(getReqToUpdate?.data);
+      notify();
+    } catch {
+      errorNotify();
+    }
+  };
+
   useEffect(() => {
     if (!!id) {
-      const getBlogContent = async () => {
-        const getReqToUpdate = await axios.get(
-          `http://localhost:3001/blogs/${id}`
-        );
-        setBlogData(getReqToUpdate?.data);
-      };
       getBlogContent();
     }
   }, [id]);
@@ -99,14 +127,12 @@ const CreateBlog = () => {
     reader.readAsDataURL(val);
     reader.onload = () => {
       setBlogData((values) => ({ ...values, image: reader.result }));
-      // setImageFile(reader.result);
     };
   };
 
   const publishBlog = () => {
     if (!!validated()) {
       postBlog();
-      notify();
       navigate(`/blogs`);
     }
   };

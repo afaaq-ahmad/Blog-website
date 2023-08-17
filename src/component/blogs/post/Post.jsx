@@ -9,6 +9,7 @@ const Post = () => {
   const { id } = useParams();
   const [blogPostData, setBlogPostData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState({});
   const navigate = useNavigate();
 
   const notify = () => {
@@ -33,12 +34,34 @@ const Post = () => {
     setTimeout(() => toastr.success(`Blog removed`, `Success!`), 300);
   };
 
+  const errorNotify = () => {
+    toastr.options = {
+      closeButton: false,
+      debug: false,
+      newestOnTop: false,
+      progressBar: false,
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
+      onclick: null,
+      showDuration: "5000",
+      hideDuration: "1000",
+      timeOut: "3000",
+      extendedTimeOut: "1000",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+    toastr.clear();
+    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
+  };
+
   const getReq = async () => {
     try {
       const getData = await axios.get(`http://localhost:3001/blogs?id=${id}`);
       setBlogPostData(getData?.data[0]);
     } catch (err) {
-      console.log(err);
+      setServerError(err);
     }
   };
 
@@ -63,7 +86,9 @@ const Post = () => {
   // console.log(blogPostData);
   return (
     <>
-      {isLoading ? (
+      {Object.keys(serverError).length ? (
+        errorNotify()
+      ) : isLoading ? (
         <Loader />
       ) : (
         <div className={styles?.flexContainer}>

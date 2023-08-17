@@ -15,6 +15,7 @@ const CreateArticle = () => {
     image: "",
   });
   const [error, setError] = useState({});
+  const [serverError, setServerError] = useState({});
 
   const notify = () => {
     toastr.options = {
@@ -38,17 +39,43 @@ const CreateArticle = () => {
     setTimeout(() => toastr.success(`Articles list updated`, `Success!`), 300);
   };
 
+  const errorNotify = () => {
+    toastr.options = {
+      closeButton: false,
+      debug: false,
+      newestOnTop: false,
+      progressBar: false,
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
+      onclick: null,
+      showDuration: "5000",
+      hideDuration: "1000",
+      timeOut: "3000",
+      extendedTimeOut: "1000",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+    toastr.clear();
+    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
+  };
+  const getArticleRequest = async () => {
+    try {
+      const getReqToUpdate = await axios.get(
+        `http://localhost:3001/articles/${id}`
+      );
+      setArticleData(getReqToUpdate?.data);
+    } catch (err) {
+      setServerError(err);
+      errorNotify();
+    }
+  };
   useEffect(() => {
     if (!!id) {
-      const getArticleRequest = async () => {
-        const getReqToUpdate = await axios.get(
-          `http://localhost:3001/articles/${id}`
-        );
-        setArticleData(getReqToUpdate?.data);
-      };
       getArticleRequest();
     }
-  }, [id]);
+  }, []);
 
   const postArticle = async () => {
     try {
@@ -57,8 +84,9 @@ const CreateArticle = () => {
       } else {
         await axios.post(`http://localhost:3001/articles/`, articleData);
       }
+      notify();
     } catch (err) {
-      console.log(err);
+      setServerError(err);
     }
   };
 
@@ -85,8 +113,6 @@ const CreateArticle = () => {
     }
 
     setError(checkError);
-
-    console.log(checkError);
     return Object?.keys(checkError)?.length > 0 ? false : true;
   };
 
@@ -105,14 +131,13 @@ const CreateArticle = () => {
   const publishArticle = () => {
     if (!!validated()) {
       postArticle();
-      notify();
+
       navigate(`/articles`);
     }
   };
   return (
     <>
       <h1 className="createBlogTitle">Enter article details</h1>
-
       <div className="create_blog_form">
         <input
           type="text"
@@ -191,6 +216,7 @@ const CreateArticle = () => {
           onClick={publishArticle}
         />
       </div>
+      {/* <s */}
     </>
   );
 };
