@@ -9,7 +9,6 @@ const Post = () => {
   const { id } = useParams();
   const [blogPostData, setBlogPostData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [serverError, setServerError] = useState({});
   const navigate = useNavigate();
 
   const notify = () => {
@@ -60,8 +59,8 @@ const Post = () => {
     try {
       const getData = await axios.get(`http://localhost:3001/blogs?id=${id}`);
       setBlogPostData(getData?.data[0]);
-    } catch (err) {
-      setServerError(err);
+    } catch {
+      errorNotify();
     }
   };
 
@@ -71,7 +70,7 @@ const Post = () => {
       notify();
       navigate(`/blogs`);
     } catch (err) {
-      console.log(err);
+      errorNotify();
     }
   };
 
@@ -82,13 +81,9 @@ const Post = () => {
       getReq();
     }, 1000);
   }, [id]);
-
-  // console.log(blogPostData);
   return (
     <>
-      {Object.keys(serverError).length ? (
-        errorNotify()
-      ) : isLoading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <div className={styles?.flexContainer}>
@@ -103,28 +98,39 @@ const Post = () => {
             <h1>{blogPostData?.title}</h1>
           </div>
           <div className={styles?.blogDate}>
-            <p>{blogPostData?.date}</p>
+            {blogPostData?.date && (
+              <p>
+                <b>Created on:</b> {blogPostData?.date}
+              </p>
+            )}
+            {blogPostData?.modified_date && (
+              <p>
+                <b>Modified on:</b> {blogPostData?.modified_date}
+              </p>
+            )}
           </div>
-          <div className={styles.buttonContainer}>
-            <div className={styles.buttons}>
-              <div
-                className={styles.delete}
-                onClick={() => {
-                  deleteThis();
-                }}
-              >
-                Delete
-              </div>
-              <div
-                className={styles.edit}
-                onClick={() => {
-                  navigate(`/create-blog/${blogPostData?.id}`);
-                }}
-              >
-                Edit
+          {blogPostData?.title && (
+            <div className={styles.buttonContainer}>
+              <div className={styles.buttons}>
+                <div
+                  className={styles.delete}
+                  onClick={() => {
+                    deleteThis();
+                  }}
+                >
+                  Delete
+                </div>
+                <div
+                  className={styles.edit}
+                  onClick={() => {
+                    navigate(`/create-blog/${blogPostData?.id}`);
+                  }}
+                >
+                  Edit
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <div className={styles?.blogDesc}>
             <p>{blogPostData?.description}</p>
           </div>

@@ -1,0 +1,12 @@
+.flexContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 91vh;
+  background-color: rgb(46, 46, 46);
+}
+
+.message {
+  font-size: 16px;
+  color: white;
+}

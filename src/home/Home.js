@@ -10,7 +10,6 @@ const Home = () => {
   const navigate = useNavigate();
   const [blogObject, setBlogObject] = useState([]);
   const [isLoading, setIsLoading] = useState();
-  let [server_error, SetServerError] = useState({});
 
   const errorNotify = () => {
     toastr.options = {
@@ -39,8 +38,7 @@ const Home = () => {
       const getBlog = await axios?.get(`http://localhost:3001/blogs/`);
       setBlogObject(getBlog?.data);
     } catch (err) {
-      SetServerError(err);
-      console.log("masg inside catch", err);
+      errorNotify();
     }
   };
 
@@ -52,14 +50,9 @@ const Home = () => {
     }, 500);
   }, []);
 
-  console.log("blogObject", blogObject);
-  console.log("error masg", server_error);
-
   return (
     <>
-      {Object.keys(server_error).length ? (
-        errorNotify()
-      ) : !isLoading ? (
+      {!isLoading ? (
         <Loader />
       ) : (
         <div className={styles.flexContainer}>

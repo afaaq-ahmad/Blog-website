@@ -11,11 +11,11 @@ const CreateArticle = () => {
     title: "",
     description: "",
     date: "",
+    modified_date: "",
     author: "",
     image: "",
   });
   const [error, setError] = useState({});
-  const [serverError, setServerError] = useState({});
 
   const notify = () => {
     toastr.options = {
@@ -37,6 +37,28 @@ const CreateArticle = () => {
     };
     toastr.clear();
     setTimeout(() => toastr.success(`Articles list updated`, `Success!`), 300);
+  };
+
+  const articleNotify = () => {
+    toastr.options = {
+      closeButton: true,
+      debug: false,
+      newestOnTop: false,
+      progressBar: false,
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
+      onclick: null,
+      showDuration: "200",
+      hideDuration: "500",
+      timeOut: "3000",
+      extendedTimeOut: "500",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+    toastr.clear();
+    setTimeout(() => toastr.success(`Article updated`, `Success!`), 300);
   };
 
   const errorNotify = () => {
@@ -67,7 +89,6 @@ const CreateArticle = () => {
       );
       setArticleData(getReqToUpdate?.data);
     } catch (err) {
-      setServerError(err);
       errorNotify();
     }
   };
@@ -78,15 +99,28 @@ const CreateArticle = () => {
   }, []);
 
   const postArticle = async () => {
-    try {
-      if (!!id) {
+    let dt = new Date();
+
+    if (!!id) {
+      try {
+        articleData.modified_date =
+          dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
         await axios.put(`http://localhost:3001/articles/${id}`, articleData);
-      } else {
-        await axios.post(`http://localhost:3001/articles/`, articleData);
+        articleNotify();
+        navigate(`/article/${id}`);
+      } catch {
+        errorNotify();
       }
-      notify();
-    } catch (err) {
-      setServerError(err);
+    } else {
+      try {
+        articleData.date =
+          dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
+        await axios.post(`http://localhost:3001/articles/`, articleData);
+        notify();
+        navigate(`/articles`);
+      } catch {
+        errorNotify();
+      }
     }
   };
 
@@ -99,10 +133,6 @@ const CreateArticle = () => {
     }
     if (articleData?.description === "") {
       checkError.description = "Description cannot be empty";
-    }
-
-    if (articleData?.date === "") {
-      checkError.date = "Date cannot be empty";
     }
     if (articleData?.author === "") {
       checkError.author = "Author name cannot be empty";
@@ -131,8 +161,6 @@ const CreateArticle = () => {
   const publishArticle = () => {
     if (!!validated()) {
       postArticle();
-
-      navigate(`/articles`);
     }
   };
   return (
@@ -164,18 +192,6 @@ const CreateArticle = () => {
 
         {error?.description && (
           <div className="invalidMessageBlog ">{error?.description}</div>
-        )}
-        <input
-          type="date"
-          className="blog_input"
-          value={articleData?.date}
-          onChange={(e) => {
-            handleChangeArticle("date", e?.target?.value);
-          }}
-        />
-
-        {error?.date && (
-          <div className="invalidMessageBlog ">{error?.date}</div>
         )}
 
         <div className="blog_input uploadFile">
@@ -216,7 +232,6 @@ const CreateArticle = () => {
           onClick={publishArticle}
         />
       </div>
-      {/* <s */}
     </>
   );
 };

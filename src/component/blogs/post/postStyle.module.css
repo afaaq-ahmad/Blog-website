@@ -18,12 +18,15 @@
 }
 
 .blogDate {
+  display: flex;
+  justify-content: space-between;
   text-align: right;
   width: 98%;
   margin-right: 20px;
   font-size: 14px;
   font-style: italic;
   font-weight: 100;
+  margin: 5px 20px;
 }
 
 .blogDesc {

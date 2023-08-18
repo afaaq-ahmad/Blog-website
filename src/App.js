@@ -11,6 +11,7 @@ import Articles from "./component/article/Articles";
 import CreateArticle from "./CreateArticle";
 import ArticlePost from "./component/article/ArticlePost";
 import Search from "./search/Search";
+import PageNotExist from "./component/page_not_exist/PageNotExist";
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
           <Route path="/create-article/:id" element={<CreateArticle />} />
           <Route path="/search" element={<Search />} />
           <Route path="/create-article" element={<CreateArticle />} />
-          {/* <Route path="/loader" element={<Loader />} /> */}
+          <Route path="/*" element={<PageNotExist />} />
         </Route>
       </Routes>
     </BrowserRouter>

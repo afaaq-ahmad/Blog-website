@@ -33,6 +33,28 @@ const ArticlePost = () => {
     setTimeout(() => toastr.success(`Article removed`, `Success!`), 300);
   };
 
+  const errorNotify = () => {
+    toastr.options = {
+      closeButton: false,
+      debug: false,
+      newestOnTop: false,
+      progressBar: false,
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
+      onclick: null,
+      showDuration: "5000",
+      hideDuration: "1000",
+      timeOut: "3000",
+      extendedTimeOut: "1000",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+    toastr.clear();
+    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
+  };
+
   const getReq = async () => {
     try {
       const getData = await axios.get(
@@ -40,7 +62,7 @@ const ArticlePost = () => {
       );
       setArticlePostData(getData?.data[0]);
     } catch (err) {
-      console.log(err);
+      errorNotify();
     }
   };
 
@@ -52,7 +74,7 @@ const ArticlePost = () => {
       notify();
       navigate(`/articles`);
     } catch (err) {
-      console.log(err);
+      errorNotify();
     }
   };
 
@@ -81,28 +103,41 @@ const ArticlePost = () => {
             <h1>{articlePostData?.title}</h1>
           </div>
           <div className={styles?.blogDate}>
-            <p>{articlePostData?.date}</p>
+            {articlePostData?.date && (
+              <p>
+                <b>Created on: </b>
+                {articlePostData?.date}
+              </p>
+            )}
+            {articlePostData?.modified_date && (
+              <p>
+                <b>Modified on: </b>
+                {articlePostData?.modified_date}
+              </p>
+            )}
           </div>
-          <div className={styles.buttonContainer}>
-            <div className={styles.buttons}>
-              <div
-                className={styles.delete}
-                onClick={() => {
-                  deleteThis();
-                }}
-              >
-                Delete
-              </div>
-              <div
-                className={styles.edit}
-                onClick={() => {
-                  navigate(`/create-article/${articlePostData?.id}`);
-                }}
-              >
-                Edit
+          {articlePostData?.title && (
+            <div className={styles.buttonContainer}>
+              <div className={styles.buttons}>
+                <div
+                  className={styles.delete}
+                  onClick={() => {
+                    deleteThis();
+                  }}
+                >
+                  Delete
+                </div>
+                <div
+                  className={styles.edit}
+                  onClick={() => {
+                    navigate(`/create-article/${articlePostData?.id}`);
+                  }}
+                >
+                  Edit
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <div className={styles?.blogDesc}>
             <p>{articlePostData?.description}</p>
           </div>
