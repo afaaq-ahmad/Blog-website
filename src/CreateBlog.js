@@ -32,6 +32,28 @@ const CreateBlog = () => {
     setTimeout(() => toastr.success(`Blogs list updated`, `Success!`), 300);
   };
 
+  const blogNotify = () => {
+    toastr.options = {
+      closeButton: true,
+      debug: false,
+      newestOnTop: false,
+      progressBar: false,
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
+      onclick: null,
+      showDuration: "200",
+      hideDuration: "500",
+      timeOut: "3000",
+      extendedTimeOut: "500",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+    toastr.clear();
+    setTimeout(() => toastr.success(`Blog updated`, `Success!`), 300);
+  };
+
   const errorNotify = () => {
     toastr.options = {
       closeButton: false,
@@ -58,6 +80,7 @@ const CreateBlog = () => {
     title: "",
     description: "",
     date: "",
+    modified_date: "",
     author: "",
     image: "",
   });
@@ -68,8 +91,8 @@ const CreateBlog = () => {
         `http://localhost:3001/blogs/${id}`
       );
       setBlogData(getReqToUpdate?.data);
-      notify();
     } catch {
+      console.log("get");
       errorNotify();
     }
   };
@@ -81,14 +104,28 @@ const CreateBlog = () => {
   }, [id]);
 
   const postBlog = async () => {
-    try {
-      if (!!id) {
+    let dt = new Date();
+
+    if (!!id) {
+      try {
+        blogData.modified_date =
+          dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
         await axios.put(`http://localhost:3001/blogs/${id}`, blogData);
-      } else {
-        await axios.post(`http://localhost:3001/blogs/`, blogData);
+        blogNotify();
+        navigate(`/blog/${id}`);
+      } catch {
+        errorNotify();
       }
-    } catch (err) {
-      console.log(err);
+    } else {
+      try {
+        blogData.date =
+          dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
+        await axios.post(`http://localhost:3001/blogs/`, blogData);
+        notify();
+        navigate(`/blogs`);
+      } catch {
+        errorNotify();
+      }
     }
   };
 
@@ -99,10 +136,6 @@ const CreateBlog = () => {
     }
     if (blogData?.description === "") {
       checkError.description = "Description cannot be empty";
-    }
-
-    if (blogData?.date === "") {
-      checkError.date = "Date cannot be empty";
     }
     if (blogData?.author === "") {
       checkError.author = "Author name cannot be empty";
@@ -133,11 +166,8 @@ const CreateBlog = () => {
   const publishBlog = () => {
     if (!!validated()) {
       postBlog();
-      navigate(`/blogs`);
     }
   };
-
-  console.log(blogData);
   return (
     <>
       <h1 className="createBlogTitle">Enter blog details</h1>
@@ -169,18 +199,6 @@ const CreateBlog = () => {
         {error?.description && (
           <div className="invalidMessageBlog ">{error?.description}</div>
         )}
-        <input
-          type="date"
-          className="blog_input"
-          value={blogData?.date}
-          onChange={(e) => {
-            handleChangeBlog("date", e?.target?.value);
-          }}
-        />
-
-        {error?.date && (
-          <div className="invalidMessageBlog ">{error?.date}</div>
-        )}
 
         <div className="blog_input uploadFile">
           <input
@@ -194,16 +212,6 @@ const CreateBlog = () => {
           <div className="imagePreview">
             <img src={blogData?.image}></img>
           </div>
-
-          {/* <button
-            type="submit"
-            className="uploadFileItem"
-            onClick={() => {
-              uploadImage();
-            }}
-          >
-            Upload
-          </button> */}
         </div>
 
         {error?.image && (

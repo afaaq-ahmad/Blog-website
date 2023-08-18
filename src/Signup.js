@@ -3,6 +3,7 @@ import "./SignupStyle.css";
 import profile from "./images/add_3971443.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import toastr from "toastr";
 
 function Signup() {
   const [userDetail, setUserDetail] = useState({
@@ -21,6 +22,50 @@ function Signup() {
   };
 
   const navigate = useNavigate();
+
+  const notify = () => {
+    toastr.options = {
+      closeButton: true,
+      debug: false,
+      newestOnTop: false,
+      progressBar: false,
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
+      onclick: null,
+      showDuration: "200",
+      hideDuration: "500",
+      timeOut: "3000",
+      extendedTimeOut: "500",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+    toastr.clear();
+    setTimeout(() => toastr.success(`Account created`, `Success!`), 300);
+  };
+
+  const errorNotify = () => {
+    toastr.options = {
+      closeButton: false,
+      debug: false,
+      newestOnTop: false,
+      progressBar: false,
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
+      onclick: null,
+      showDuration: "5000",
+      hideDuration: "1000",
+      timeOut: "3000",
+      extendedTimeOut: "1000",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+    toastr.clear();
+    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
+  };
   const isValid = () => {
     let isError = {};
 
@@ -68,12 +113,13 @@ function Signup() {
           `http://localhost:3001/userdetail/`,
           userDetail
         );
-        console.log(response?.status);
+        notify();
       } else {
         alert("Email already exist");
       }
     } catch (err) {
       console.log(err);
+      errorNotify();
     }
   };
 

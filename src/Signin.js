@@ -3,6 +3,7 @@ import { Link, redirect, useNavigate } from "react-router-dom";
 import "./SignupStyle.css";
 import addProfile from "./images/user_848043.png";
 import axios from "axios";
+import toastr from "toastr";
 
 function Signin() {
   const getUser = localStorage.getItem("login-user");
@@ -11,8 +12,51 @@ function Signin() {
     password: "",
   });
   const [error, setError] = useState({});
-
   const navigate = useNavigate();
+
+  const notify = () => {
+    toastr.options = {
+      closeButton: true,
+      debug: false,
+      newestOnTop: false,
+      progressBar: false,
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
+      onclick: null,
+      showDuration: "200",
+      hideDuration: "500",
+      timeOut: "3000",
+      extendedTimeOut: "500",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+    toastr.clear();
+    setTimeout(() => toastr.success(`Signed in`, `Success!`), 300);
+  };
+
+  const errorNotify = () => {
+    toastr.options = {
+      closeButton: false,
+      debug: false,
+      newestOnTop: false,
+      progressBar: false,
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
+      onclick: null,
+      showDuration: "5000",
+      hideDuration: "1000",
+      timeOut: "3000",
+      extendedTimeOut: "1000",
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+    };
+    toastr.clear();
+    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
+  };
 
   const isValid = () => {
     let isError = {};
@@ -49,13 +93,13 @@ function Signin() {
       const checkData = await axios.get(
         `http://localhost:3001/userdetail?email=${userDetail.email}`
       );
-
       // console.log("checkData?.data ", checkData?.data);
 
       if (checkData?.data[0]?.email === userDetail?.email) {
         if (checkData?.data[0]?.password === userDetail?.password) {
           localStorage.setItem("login-user", checkData?.data[0]?.email);
           navigate("/blogs");
+          notify();
         } else {
           window.alert("Incorrect password");
         }
@@ -64,6 +108,7 @@ function Signin() {
       }
     } catch (err) {
       console.log(err);
+      errorNotify();
     }
   };
 
