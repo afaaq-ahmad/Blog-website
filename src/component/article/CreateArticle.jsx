@@ -1,5 +1,5 @@
-import "./createblogstyle.css";
-import "./SignupStyle.css";
+import "../blogs/post/createblogstyle.css";
+import "../../signup/SignupStyle.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";

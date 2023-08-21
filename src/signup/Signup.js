@@ -1,6 +1,6 @@
 import { useDebugValue, useState } from "react";
 import "./SignupStyle.css";
-import profile from "./images/add_3971443.png";
+import profile from "../images/add_3971443.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toastr from "toastr";
@@ -105,9 +105,6 @@ function Signup() {
       const checkEmail = await axios?.get(
         `http://localhost:3001/userdetail?email=${userDetail?.email}`
       );
-
-      console.log("checkEmail?.data", checkEmail?.data);
-
       if (checkEmail?.data?.length === 0) {
         const response = await axios?.post(
           `http://localhost:3001/userdetail/`,
@@ -118,7 +115,6 @@ function Signup() {
         alert("Email already exist");
       }
     } catch (err) {
-      console.log(err);
       errorNotify();
     }
   };
@@ -140,100 +136,105 @@ function Signup() {
         <img src={profile} alt="profile" />
       </div>
 
-      <div className="formContainer">
-        <form onSubmit={handleSubmit}>
-          <div className="inputWithLabel">
-            <input
-              className="inputContainer"
-              type="text"
-              placeholder="First Name"
-              value={userDetail.firstName}
-              onChange={(e) => handleChange("firstName", e?.target?.value)}
-            />
-          </div>
-          {error?.firstName && (
-            <div className="invalidMessage">{error?.firstName}</div>
-          )}
-
-          <div className="inputWithLabel">
-            <input
-              className="inputContainer"
-              type="text"
-              placeholder="Last Name"
-              value={userDetail.lastName}
-              onChange={(e) => handleChange("lastName", e?.target?.value)}
-            />
-          </div>
-
-          {error?.lastName && (
-            <div className="invalidMessage">{error?.lastName}</div>
-          )}
-
-          <div className="inputWithLabel">
-            <input
-              className="inputContainer"
-              type="text"
-              placeholder="Age"
-              value={userDetail.age}
-              onChange={(e) => handleChange("age", e?.target?.value)}
-            />
-          </div>
-
-          {error?.age && <div className="invalidMessage">{error?.age}</div>}
-
-          <div className="radioContainer">
-            <div>
-              <label className="radioInput">
-                <input
-                  type="radio"
-                  checked={userDetail?.gender === "male" ? true : false}
-                  onChange={() => handleChange("gender", "male")}
-                />
-                Male
-              </label>
-              <label className="radioInput">
-                <input
-                  type="radio"
-                  checked={userDetail?.gender === "female"}
-                  onChange={(e) => handleChange("gender", "female")}
-                />
-                Female
-              </label>
+      <div className="flexContainer">
+        <div className="formContainer">
+          <form onSubmit={handleSubmit}>
+            <div className="inputWithLabel">
+              <input
+                className="inputContainer"
+                type="text"
+                placeholder="First Name"
+                value={userDetail.firstName}
+                onChange={(e) => handleChange("firstName", e?.target?.value)}
+              />
             </div>
+            {error?.firstName && (
+              <div className="invalidMessage">{error?.firstName}</div>
+            )}
+
+            <div className="inputWithLabel">
+              <input
+                className="inputContainer"
+                type="text"
+                placeholder="Last Name"
+                value={userDetail.lastName}
+                onChange={(e) => handleChange("lastName", e?.target?.value)}
+              />
+            </div>
+
+            {error?.lastName && (
+              <div className="invalidMessage">{error?.lastName}</div>
+            )}
+
+            <div className="inputWithLabel">
+              <input
+                className="inputContainer"
+                type="text"
+                placeholder="Age"
+                value={userDetail.age}
+                onChange={(e) => handleChange("age", e?.target?.value)}
+              />
+            </div>
+
+            {error?.age && <div className="invalidMessage">{error?.age}</div>}
+
+            <div className="radioContainer">
+              <div>
+                <label className="radioInput">
+                  <input
+                    type="radio"
+                    checked={userDetail?.gender === "male" ? true : false}
+                    onChange={() => handleChange("gender", "male")}
+                  />
+                  Male
+                </label>
+                <label className="radioInput">
+                  <input
+                    type="radio"
+                    checked={userDetail?.gender === "female"}
+                    onChange={(e) => handleChange("gender", "female")}
+                  />
+                  Female
+                </label>
+              </div>
+            </div>
+
+            <div className="inputWithLabel">
+              <input
+                className="inputContainer"
+                type="text"
+                placeholder="Email"
+                value={userDetail.email}
+                onChange={(e) => handleChange("email", e?.target?.value)}
+              />
+            </div>
+
+            {error?.email && (
+              <div className="invalidMessage">{error?.email}</div>
+            )}
+
+            <div className="inputWithLabel">
+              <input
+                className="inputContainer"
+                type="text"
+                placeholder="Choose Password"
+                value={userDetail.password}
+                onChange={(e) => handleChange("password", e?.target?.value)}
+              />
+            </div>
+
+            {error?.age && <div className="invalidMessage">{error?.age}</div>}
+
+            <div className="buttonContainer">
+              <input type="submit" />
+            </div>
+          </form>
+        </div>
+        <div className="otherPageContainer">
+          <div className="otherPage">
+            <Link to="/signin">Already have an account? Sign In</Link>
           </div>
-
-          <div className="inputWithLabel">
-            <input
-              className="inputContainer"
-              type="text"
-              placeholder="Email"
-              value={userDetail.email}
-              onChange={(e) => handleChange("email", e?.target?.value)}
-            />
-          </div>
-
-          {error?.email && <div className="invalidMessage">{error?.email}</div>}
-
-          <div className="inputWithLabel">
-            <input
-              className="inputContainer"
-              type="text"
-              placeholder="Choose Password"
-              value={userDetail.password}
-              onChange={(e) => handleChange("password", e?.target?.value)}
-            />
-          </div>
-
-          {error?.age && <div className="invalidMessage">{error?.age}</div>}
-
-          <div className="buttonContainer">
-            <input type="submit" />
-          </div>
-        </form>
-      </div>
-
-      <div className="otherPage">
-        <Link to="/signin">Already have an account? Sign In</Link>
+        </div>
       </div>
     </>
   );

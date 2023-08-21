@@ -1,5 +1,5 @@
 import "./createblogstyle.css";
-import "./SignupStyle.css";
+import "../../../signup/SignupStyle.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -92,7 +92,6 @@ const CreateBlog = () => {
       );
       setBlogData(getReqToUpdate?.data);
     } catch {
-      console.log("get");
       errorNotify();
     }
   };
@@ -146,8 +145,6 @@ const CreateBlog = () => {
     }
 
     setError(checkError);
-
-    console.log(checkError);
     return Object?.keys(checkError)?.length > 0 ? false : true;
   };
 

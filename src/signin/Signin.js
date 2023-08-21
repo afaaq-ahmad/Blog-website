@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, redirect, useNavigate } from "react-router-dom";
-import "./SignupStyle.css";
-import addProfile from "./images/user_848043.png";
+import "../signup/SignupStyle.css";
+import addProfile from "../images/user_848043.png";
 import axios from "axios";
 import toastr from "toastr";
 
@@ -93,7 +93,6 @@ function Signin() {
       const checkData = await axios.get(
         `http://localhost:3001/userdetail?email=${userDetail.email}`
       );
-      // console.log("checkData?.data ", checkData?.data);
 
       if (checkData?.data[0]?.email === userDetail?.email) {
         if (checkData?.data[0]?.password === userDetail?.password) {
@@ -107,7 +106,6 @@ function Signin() {
         window.alert("user not exist");
       }
     } catch (err) {
-      console.log(err);
       errorNotify();
     }
   };
@@ -117,7 +115,6 @@ function Signin() {
     if (!!isValid()) {
       isExist();
     }
-    // console.log(userDetail);
   };
 
   return (

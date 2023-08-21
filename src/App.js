@@ -1,16 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Signup from "./Signup";
-import Signin from "./Signin";
+import Signup from "./signup/Signup";
+import Signin from "./signin/Signin";
 import Home from "./home/Home";
-import CreateBlog from "./CreateBlog";
-import Navbar from "./Navbar";
+import CreateBlog from "./component/blogs/post/CreateBlog";
+import Navbar from "./component/navbar/Navbar";
 import Layout from "./component/common/Layout";
 import Post from "./component/blogs/post/Post";
 import Articles from "./component/article/Articles";
-import CreateArticle from "./CreateArticle";
+import CreateArticle from "./component/article/CreateArticle";
 import ArticlePost from "./component/article/ArticlePost";
-import Search from "./search/Search";
+import Search from "./component/search/Search";
 import PageNotExist from "./component/page_not_exist/PageNotExist";
 
 function App() {

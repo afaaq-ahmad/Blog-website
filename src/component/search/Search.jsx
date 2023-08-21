@@ -18,17 +18,12 @@ const Search = () => {
         const getArticles = await axios?.get(`http://localhost:3001/articles/`);
         setSearchBlogData(getBlogs?.data);
         setSearchArticleData(getArticles?.data);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
 
     getForSearch();
   }, []);
 
-  console.log("input data", inputData);
-  console.log("search blog", searchBlogData);
-  console.log("search article", searchArticleData);
   return (
     <>
       <div className="searchFlexContainer">
