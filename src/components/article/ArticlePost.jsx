@@ -4,56 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import styles from "../blogs/post/postStyle.module.css";
 import Loader from "../loader/Loader";
 import toastr from "toastr";
+import ToastrError from "../common/ToastrError";
+import ToastrSuccess from "../common/ToastrSuccess";
 
 const ArticlePost = () => {
   const { id } = useParams();
   const [articlePostData, setArticlePostData] = useState({});
   const [isLoading, setIsloading] = useState(false);
   const navigate = useNavigate();
-
-  const notify = () => {
-    toastr.options = {
-      closeButton: true,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "200",
-      hideDuration: "500",
-      timeOut: "3000",
-      extendedTimeOut: "500",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.success(`Article removed`, `Success!`), 300);
-  };
-
-  const errorNotify = () => {
-    toastr.options = {
-      closeButton: false,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "5000",
-      hideDuration: "1000",
-      timeOut: "3000",
-      extendedTimeOut: "1000",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
-  };
 
   const getReq = async () => {
     try {
@@ -62,7 +20,7 @@ const ArticlePost = () => {
       );
       setArticlePostData(getData?.data[0]);
     } catch (err) {
-      errorNotify();
+      return ToastrError({ errorMessage: err.message });
     }
   };
 
@@ -71,10 +29,10 @@ const ArticlePost = () => {
       await axios.delete(
         `http://localhost:3001/articles/${articlePostData?.id}`
       );
-      notify();
       navigate(`/articles`);
+      return ToastrSuccess({ sucessMessage: "Article deleted" });
     } catch (err) {
-      errorNotify();
+      return ToastrError({ errorMessage: err.message });
     }
   };
 

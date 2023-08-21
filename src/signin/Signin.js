@@ -3,7 +3,8 @@ import { Link, redirect, useNavigate } from "react-router-dom";
 import "../signup/SignupStyle.css";
 import addProfile from "../images/user_848043.png";
 import axios from "axios";
-import toastr from "toastr";
+import ToastrSuccess from "../components/common/ToastrSuccess";
+import ToastrError from "../components/common/ToastrError";
 
 function Signin() {
   const getUser = localStorage.getItem("login-user");
@@ -13,50 +14,6 @@ function Signin() {
   });
   const [error, setError] = useState({});
   const navigate = useNavigate();
-
-  const notify = () => {
-    toastr.options = {
-      closeButton: true,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "200",
-      hideDuration: "500",
-      timeOut: "3000",
-      extendedTimeOut: "500",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.success(`Signed in`, `Success!`), 300);
-  };
-
-  const errorNotify = () => {
-    toastr.options = {
-      closeButton: false,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "5000",
-      hideDuration: "1000",
-      timeOut: "3000",
-      extendedTimeOut: "1000",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
-  };
 
   const isValid = () => {
     let isError = {};
@@ -98,7 +55,7 @@ function Signin() {
         if (checkData?.data[0]?.password === userDetail?.password) {
           localStorage.setItem("login-user", checkData?.data[0]?.email);
           navigate("/blogs");
-          notify();
+          return ToastrSuccess({ successMessage: "Signed In!" });
         } else {
           window.alert("Incorrect password");
         }
@@ -106,7 +63,7 @@ function Signin() {
         window.alert("user not exist");
       }
     } catch (err) {
-      errorNotify();
+      return ToastrError({ errorMessage: err.message });
     }
   };
 

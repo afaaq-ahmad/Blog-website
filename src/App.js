@@ -3,15 +3,15 @@ import "./App.css";
 import Signup from "./signup/Signup";
 import Signin from "./signin/Signin";
 import Home from "./home/Home";
-import CreateBlog from "./component/blogs/post/CreateBlog";
-import Navbar from "./component/navbar/Navbar";
-import Layout from "./component/common/Layout";
-import Post from "./component/blogs/post/Post";
-import Articles from "./component/article/Articles";
-import CreateArticle from "./component/article/CreateArticle";
-import ArticlePost from "./component/article/ArticlePost";
-import Search from "./component/search/Search";
-import PageNotExist from "./component/page_not_exist/PageNotExist";
+import CreateBlog from "./components/blogs/post/CreateBlog";
+import Navbar from "./components/navbar/Navbar";
+import Layout from "./components/common/Layout";
+import Post from "./components/blogs/post/Post";
+import Articles from "./components/article/Articles";
+import CreateArticle from "./components/article/CreateArticle";
+import ArticlePost from "./components/article/ArticlePost";
+import Search from "./components/search/Search";
+import PageNotExist from "./components/page_not_exist/PageNotExist";
 
 function App() {
   return (

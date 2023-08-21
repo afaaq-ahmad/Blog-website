@@ -4,77 +4,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import toastr from "toastr";
+import ToastrError from "../../common/ToastrError";
+import ToastrSuccess from "../../common/ToastrSuccess";
 
 const CreateBlog = () => {
   const { id } = useParams();
   const [error, setError] = useState({});
   const navigate = useNavigate();
-
-  const notify = () => {
-    toastr.options = {
-      closeButton: true,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "200",
-      hideDuration: "500",
-      timeOut: "3000",
-      extendedTimeOut: "500",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.success(`Blogs list updated`, `Success!`), 300);
-  };
-
-  const blogNotify = () => {
-    toastr.options = {
-      closeButton: true,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "200",
-      hideDuration: "500",
-      timeOut: "3000",
-      extendedTimeOut: "500",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.success(`Blog updated`, `Success!`), 300);
-  };
-
-  const errorNotify = () => {
-    toastr.options = {
-      closeButton: false,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "5000",
-      hideDuration: "1000",
-      timeOut: "3000",
-      extendedTimeOut: "1000",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
-  };
 
   const [blogData, setBlogData] = useState({
     title: "",
@@ -91,8 +27,8 @@ const CreateBlog = () => {
         `http://localhost:3001/blogs/${id}`
       );
       setBlogData(getReqToUpdate?.data);
-    } catch {
-      errorNotify();
+    } catch (err) {
+      return ToastrError({ errorMessage: err.message });
     }
   };
 
@@ -110,20 +46,20 @@ const CreateBlog = () => {
         blogData.modified_date =
           dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
         await axios.put(`http://localhost:3001/blogs/${id}`, blogData);
-        blogNotify();
         navigate(`/blog/${id}`);
-      } catch {
-        errorNotify();
+        return ToastrSuccess({ successMessage: "Blog Updated!" });
+      } catch (err) {
+        return ToastrError({ errorMessage: err.message });
       }
     } else {
       try {
         blogData.date =
           dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
         await axios.post(`http://localhost:3001/blogs/`, blogData);
-        notify();
         navigate(`/blogs`);
-      } catch {
-        errorNotify();
+        return ToastrSuccess({ successMessage: "Blog Created!" });
+      } catch (err) {
+        return ToastrError({ errorMessage: err.message });
       }
     }
   };

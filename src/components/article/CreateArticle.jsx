@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import toastr from "toastr";
+import ToastrError from "../common/ToastrError";
+import ToastrSuccess from "../common/ToastrSuccess";
 
 const CreateArticle = () => {
   const { id } = useParams();
@@ -17,71 +19,6 @@ const CreateArticle = () => {
   });
   const [error, setError] = useState({});
 
-  const notify = () => {
-    toastr.options = {
-      closeButton: true,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "200",
-      hideDuration: "500",
-      timeOut: "3000",
-      extendedTimeOut: "500",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.success(`Articles list updated`, `Success!`), 300);
-  };
-
-  const articleNotify = () => {
-    toastr.options = {
-      closeButton: true,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "200",
-      hideDuration: "500",
-      timeOut: "3000",
-      extendedTimeOut: "500",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.success(`Article updated`, `Success!`), 300);
-  };
-
-  const errorNotify = () => {
-    toastr.options = {
-      closeButton: false,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "5000",
-      hideDuration: "1000",
-      timeOut: "3000",
-      extendedTimeOut: "1000",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
-  };
   const getArticleRequest = async () => {
     try {
       const getReqToUpdate = await axios.get(
@@ -89,7 +26,7 @@ const CreateArticle = () => {
       );
       setArticleData(getReqToUpdate?.data);
     } catch (err) {
-      errorNotify();
+      return ToastrError({ errorMessage: err.message });
     }
   };
   useEffect(() => {
@@ -106,20 +43,20 @@ const CreateArticle = () => {
         articleData.modified_date =
           dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
         await axios.put(`http://localhost:3001/articles/${id}`, articleData);
-        articleNotify();
         navigate(`/article/${id}`);
-      } catch {
-        errorNotify();
+        return ToastrSuccess({ successMessage: "Article updated!" });
+      } catch (err) {
+        return ToastrError({ errorMessage: err.message });
       }
     } else {
       try {
         articleData.date =
           dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
         await axios.post(`http://localhost:3001/articles/`, articleData);
-        notify();
         navigate(`/articles`);
-      } catch {
-        errorNotify();
+        return ToastrSuccess({ successMessage: "Article Created!" });
+      } catch (err) {
+        return ToastrError({ errorMessage: err.message });
       }
     }
   };

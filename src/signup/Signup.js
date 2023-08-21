@@ -3,9 +3,12 @@ import "./SignupStyle.css";
 import profile from "../images/add_3971443.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import toastr from "toastr";
+import ToastrSuccess from "../components/common/ToastrSuccess";
+import ToastrError from "../components/common/ToastrError";
 
 function Signup() {
+  const [error, setError] = useState({});
+  const navigate = useNavigate();
   const [userDetail, setUserDetail] = useState({
     firstName: "",
     lastName: "",
@@ -15,57 +18,10 @@ function Signup() {
     password: "",
   });
 
-  const [error, setError] = useState({});
-
   const handleChange = (name, value) => {
     setUserDetail((values) => ({ ...values, [name]: value }));
   };
 
-  const navigate = useNavigate();
-
-  const notify = () => {
-    toastr.options = {
-      closeButton: true,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "200",
-      hideDuration: "500",
-      timeOut: "3000",
-      extendedTimeOut: "500",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.success(`Account created`, `Success!`), 300);
-  };
-
-  const errorNotify = () => {
-    toastr.options = {
-      closeButton: false,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "5000",
-      hideDuration: "1000",
-      timeOut: "3000",
-      extendedTimeOut: "1000",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
-  };
   const isValid = () => {
     let isError = {};
 
@@ -110,12 +66,12 @@ function Signup() {
           `http://localhost:3001/userdetail/`,
           userDetail
         );
-        notify();
+        return ToastrSuccess({ successMessage: "Account Created!" });
       } else {
         alert("Email already exist");
       }
     } catch (err) {
-      errorNotify();
+      return ToastrError({ errorMessage: err.message });
     }
   };
 

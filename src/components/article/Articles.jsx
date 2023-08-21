@@ -4,12 +4,11 @@ import { useNavigate } from "react-router-dom";
 import "toastr/build/toastr.min.css";
 import { Link } from "react-router-dom";
 import styles from "./articleStyle.module.css";
-import toastr from "toastr";
+import ToastrError from "../common/ToastrError";
 import Loader from "../loader/Loader";
 
 const Articles = () => {
   const [articleData, setArticleData] = useState([]);
-  const [serverError, setServerError] = useState({});
   const [isLoading, setIsLoading] = useState();
 
   const navigate = useNavigate();
@@ -18,30 +17,8 @@ const Articles = () => {
       const getArticles = await axios.get(`http://localhost:3001/articles/`);
       setArticleData(getArticles?.data);
     } catch (err) {
-      setServerError(err);
+      return ToastrError({ errorMessage: err.message });
     }
-  };
-
-  const errorNotify = () => {
-    toastr.options = {
-      closeButton: false,
-      debug: false,
-      newestOnTop: false,
-      progressBar: false,
-      positionClass: "toast-top-right",
-      preventDuplicates: true,
-      onclick: null,
-      showDuration: "5000",
-      hideDuration: "1000",
-      timeOut: "3000",
-      extendedTimeOut: "1000",
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-    };
-    toastr.clear();
-    setTimeout(() => toastr.error("Server not found", "Error"), 1000);
   };
 
   useEffect(() => {
@@ -54,9 +31,7 @@ const Articles = () => {
 
   return (
     <>
-      {Object.keys(serverError).length ? (
-        errorNotify()
-      ) : isLoading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <div className={styles.flexContainer}>
