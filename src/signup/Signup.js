@@ -62,16 +62,13 @@ function Signup() {
         `http://localhost:3001/userdetail?email=${userDetail?.email}`
       );
       if (checkEmail?.data?.length === 0) {
-        const response = await axios?.post(
-          `http://localhost:3001/userdetail/`,
-          userDetail
-        );
-        return ToastrSuccess({ successMessage: "Account Created!" });
+        await axios?.post(`http://localhost:3001/userdetail/`, userDetail);
+        ToastrSuccess({ successMessage: "Account Created!" });
       } else {
         alert("Email already exist");
       }
     } catch (err) {
-      return ToastrError({ errorMessage: err.message });
+      ToastrError({ errorMessage: err.message });
     }
   };
 

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "../blogs/post/postStyle.module.css";
 import Loader from "../loader/Loader";
-import toastr from "toastr";
 import ToastrError from "../common/ToastrError";
 import ToastrSuccess from "../common/ToastrSuccess";
 
@@ -12,6 +11,7 @@ const ArticlePost = () => {
   const [articlePostData, setArticlePostData] = useState({});
   const [isLoading, setIsloading] = useState(false);
   const navigate = useNavigate();
+  const getUserID = localStorage.getItem("user-id");
 
   const getReq = async () => {
     try {
@@ -30,7 +30,7 @@ const ArticlePost = () => {
         `http://localhost:3001/articles/${articlePostData?.id}`
       );
       navigate(`/articles`);
-      return ToastrSuccess({ sucessMessage: "Article deleted" });
+      ToastrSuccess({ sucessMessage: "Article deleted" });
     } catch (err) {
       return ToastrError({ errorMessage: err.message });
     }
@@ -67,14 +67,14 @@ const ArticlePost = () => {
                 {articlePostData?.date}
               </p>
             )}
-            {articlePostData?.modified_date && (
+            {!!articlePostData?.modified_date && (
               <p>
                 <b>Modified on: </b>
                 {articlePostData?.modified_date}
               </p>
             )}
           </div>
-          {articlePostData?.title && (
+          {articlePostData?.userID == getUserID && !!articlePostData?.title && (
             <div className={styles.buttonContainer}>
               <div className={styles.buttons}>
                 <div

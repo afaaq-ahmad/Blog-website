@@ -11,23 +11,28 @@ const Post = () => {
   const [blogPostData, setBlogPostData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const getUserID = localStorage.getItem("user-id");
 
   const getReq = async () => {
     try {
       const getData = await axios.get(`http://localhost:3001/blogs?id=${id}`);
-      setBlogPostData(getData?.data[0]);
+      if (getData?.data?.length !== 0) {
+        setBlogPostData(getData?.data[0]);
+      } else {
+        ToastrError({ errorMessage: "record not exist" });
+      }
     } catch (err) {
-      return ToastrError({ errorMessage: err.message });
+      ToastrError({ errorMessage: err.message });
     }
   };
 
-  const deleteThis = async () => {
+  const deleteBlog = async () => {
     try {
       await axios.delete(`http://localhost:3001/blogs/${blogPostData?.id}`);
       navigate(`/blogs`);
-      return ToastrSuccess({ successMessage: "Blog Deleted!" });
+      ToastrSuccess({ successMessage: "Blog Deleted!" });
     } catch (err) {
-      return ToastrError({ errorMessage: err.message });
+      ToastrError({ errorMessage: err.message });
     }
   };
 
@@ -38,6 +43,9 @@ const Post = () => {
       getReq();
     }, 1000);
   }, [id]);
+
+  console.log(blogPostData);
+
   return (
     <>
       {isLoading ? (
@@ -66,13 +74,13 @@ const Post = () => {
               </p>
             )}
           </div>
-          {blogPostData?.title && (
+          {blogPostData?.userID == getUserID && blogPostData?.title && (
             <div className={styles.buttonContainer}>
               <div className={styles.buttons}>
                 <div
                   className={styles.delete}
                   onClick={() => {
-                    deleteThis();
+                    deleteBlog();
                   }}
                 >
                   Delete

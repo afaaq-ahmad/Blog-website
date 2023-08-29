@@ -9,6 +9,10 @@ import ToastrSuccess from "../common/ToastrSuccess";
 
 const CreateArticle = () => {
   const { id } = useParams();
+  const [error, setError] = useState({});
+  const navigate = useNavigate();
+  const user_ID = localStorage.getItem("user-id");
+
   const [articleData, setArticleData] = useState({
     title: "",
     description: "",
@@ -16,8 +20,8 @@ const CreateArticle = () => {
     modified_date: "",
     author: "",
     image: "",
+    userID: user_ID,
   });
-  const [error, setError] = useState({});
 
   const getArticleRequest = async () => {
     try {
@@ -26,7 +30,7 @@ const CreateArticle = () => {
       );
       setArticleData(getReqToUpdate?.data);
     } catch (err) {
-      return ToastrError({ errorMessage: err.message });
+      ToastrError({ errorMessage: err.message });
     }
   };
   useEffect(() => {
@@ -44,24 +48,23 @@ const CreateArticle = () => {
           dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
         await axios.put(`http://localhost:3001/articles/${id}`, articleData);
         navigate(`/article/${id}`);
-        return ToastrSuccess({ successMessage: "Article updated!" });
+        ToastrSuccess({ successMessage: "Article updated!" });
       } catch (err) {
-        return ToastrError({ errorMessage: err.message });
+        ToastrError({ errorMessage: err.message });
       }
     } else {
+      setArticleData((values) => ({ ...values, userID: user_ID }));
       try {
         articleData.date =
           dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
         await axios.post(`http://localhost:3001/articles/`, articleData);
         navigate(`/articles`);
-        return ToastrSuccess({ successMessage: "Article Created!" });
+        ToastrSuccess({ successMessage: "Article Created!" });
       } catch (err) {
-        return ToastrError({ errorMessage: err.message });
+        ToastrError({ errorMessage: err.message });
       }
     }
   };
-
-  const navigate = useNavigate();
 
   const validated = () => {
     const checkError = {};

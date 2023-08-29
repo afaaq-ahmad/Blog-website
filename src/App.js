@@ -6,7 +6,7 @@ import Home from "./home/Home";
 import CreateBlog from "./components/blogs/post/CreateBlog";
 import Navbar from "./components/navbar/Navbar";
 import Layout from "./components/common/Layout";
-import Post from "./components/blogs/post/Post";
+import Post from "./components/blogs/post/blogPost";
 import Articles from "./components/article/Articles";
 import CreateArticle from "./components/article/CreateArticle";
 import ArticlePost from "./components/article/ArticlePost";

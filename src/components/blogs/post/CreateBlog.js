@@ -3,7 +3,6 @@ import "../../../signup/SignupStyle.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import toastr from "toastr";
 import ToastrError from "../../common/ToastrError";
 import ToastrSuccess from "../../common/ToastrSuccess";
 
@@ -11,6 +10,7 @@ const CreateBlog = () => {
   const { id } = useParams();
   const [error, setError] = useState({});
   const navigate = useNavigate();
+  const user_ID = localStorage.getItem("user-id");
 
   const [blogData, setBlogData] = useState({
     title: "",
@@ -19,6 +19,7 @@ const CreateBlog = () => {
     modified_date: "",
     author: "",
     image: "",
+    userID: user_ID,
   });
 
   const getBlogContent = async () => {
@@ -28,7 +29,7 @@ const CreateBlog = () => {
       );
       setBlogData(getReqToUpdate?.data);
     } catch (err) {
-      return ToastrError({ errorMessage: err.message });
+      ToastrError({ errorMessage: err.message });
     }
   };
 
@@ -46,20 +47,26 @@ const CreateBlog = () => {
         blogData.modified_date =
           dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
         await axios.put(`http://localhost:3001/blogs/${id}`, blogData);
-        navigate(`/blog/${id}`);
-        return ToastrSuccess({ successMessage: "Blog Updated!" });
+        if (localStorage.getItem("from blogs")) {
+          navigate(`/blogs`);
+        } else {
+          navigate(`/blog/${id}`);
+        }
+
+        ToastrSuccess({ successMessage: "Blog Updated!" });
       } catch (err) {
-        return ToastrError({ errorMessage: err.message });
+        ToastrError({ errorMessage: err.message });
       }
     } else {
+      setBlogData((values) => ({ ...values, userID: user_ID }));
       try {
         blogData.date =
           dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
         await axios.post(`http://localhost:3001/blogs/`, blogData);
         navigate(`/blogs`);
-        return ToastrSuccess({ successMessage: "Blog Created!" });
+        ToastrSuccess({ successMessage: "Blog Created!" });
       } catch (err) {
-        return ToastrError({ errorMessage: err.message });
+        ToastrError({ errorMessage: err.message });
       }
     }
   };
@@ -101,6 +108,7 @@ const CreateBlog = () => {
       postBlog();
     }
   };
+
   return (
     <>
       <h1 className="createBlogTitle">Enter blog details</h1>

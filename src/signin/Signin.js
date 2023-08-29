@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../signup/SignupStyle.css";
 import addProfile from "../images/user_848043.png";
 import axios from "axios";
@@ -38,9 +38,7 @@ function Signin() {
   };
 
   useEffect(() => {
-    if (!!getUser) {
-      navigate("/blogs");
-    } else {
+    if (!getUser) {
       navigate(`/signin`);
     }
   }, [getUser]);
@@ -54,8 +52,9 @@ function Signin() {
       if (checkData?.data[0]?.email === userDetail?.email) {
         if (checkData?.data[0]?.password === userDetail?.password) {
           localStorage.setItem("login-user", checkData?.data[0]?.email);
+          localStorage.setItem("user-id", checkData?.data[0]?.id);
           navigate("/blogs");
-          return ToastrSuccess({ successMessage: "Signed In!" });
+          ToastrSuccess({ successMessage: "Signed In!" });
         } else {
           window.alert("Incorrect password");
         }
@@ -63,11 +62,11 @@ function Signin() {
         window.alert("user not exist");
       }
     } catch (err) {
-      return ToastrError({ errorMessage: err.message });
+      ToastrError({ errorMessage: err.message });
     }
   };
 
-  const handlleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (!!isValid()) {
       isExist();
@@ -83,7 +82,7 @@ function Signin() {
       </div>
 
       <div className="formContainer">
-        <form onSubmit={handlleSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="inputWithLabel">
             <input
               className="inputContainer"

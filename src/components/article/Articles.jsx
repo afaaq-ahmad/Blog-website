@@ -6,18 +6,21 @@ import { Link } from "react-router-dom";
 import styles from "./articleStyle.module.css";
 import ToastrError from "../common/ToastrError";
 import Loader from "../loader/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { getArticleList, selectArticleList } from "../common/listSlice";
 
 const Articles = () => {
-  const [articleData, setArticleData] = useState([]);
   const [isLoading, setIsLoading] = useState();
+  const dispatch = useDispatch();
+  const articles = useSelector(selectArticleList);
 
   const navigate = useNavigate();
   const getArticleReq = async () => {
     try {
       const getArticles = await axios.get(`http://localhost:3001/articles/`);
-      setArticleData(getArticles?.data);
+      dispatch(getArticleList(getArticles?.data));
     } catch (err) {
-      return ToastrError({ errorMessage: err.message });
+      ToastrError({ errorMessage: err.message });
     }
   };
 
@@ -41,8 +44,8 @@ const Articles = () => {
             </Link>
           </div>
 
-          {articleData?.length > 0 &&
-            articleData.map((article, i) => (
+          {articles?.length > 0 &&
+            articles?.map((article, i) => (
               <div key={i} className={styles.articleContainer}>
                 <div
                   className={styles.eachArticle}

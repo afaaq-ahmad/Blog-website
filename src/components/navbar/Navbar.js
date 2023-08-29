@@ -5,7 +5,7 @@ import logo from "../../images/logo-no-background.png";
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const isLoginPage = localStorage?.length;
+  const isLoginPage = localStorage.getItem("login-user");
 
   return (
     <>
@@ -21,7 +21,7 @@ const Navbar = () => {
         </div>
 
         <div className="rightSideNavbar">
-          {isLoginPage > 0 && (
+          {isLoginPage?.length > 0 && (
             <div
               className="navbarPageLinks"
               onClick={() => {
@@ -31,7 +31,7 @@ const Navbar = () => {
               Search
             </div>
           )}
-          {isLoginPage > 0 && (
+          {isLoginPage?.length > 0 && (
             <div
               className="navbarPageLinks"
               onClick={() => {
@@ -41,7 +41,7 @@ const Navbar = () => {
               Articles
             </div>
           )}
-          {isLoginPage > 0 && (
+          {isLoginPage?.length > 0 && (
             <div
               className="navbarPageLinks"
               onClick={() => {
@@ -51,7 +51,7 @@ const Navbar = () => {
               Blogs
             </div>
           )}
-          {isLoginPage > 0 && (
+          {isLoginPage?.length > 0 && (
             <div
               className="signinButton"
               onClick={() => {

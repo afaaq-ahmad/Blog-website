@@ -14,13 +14,15 @@
 }
 
 .createBlogDiv {
+  /* border: 1px solid black; */
+  height: 60px;
   display: flex;
   justify-content: right;
   align-items: center;
-  margin-bottom: 20px;
+  margin: 20px 0px;
 }
 
-.createBlogIcon {
+.createBlogText {
   text-align: center;
   text-decoration: none;
   margin: 30px 50px 0px;
@@ -32,13 +34,50 @@
   border-radius: 5px;
 }
 
-.createBlogIcon:hover {
+.createBlogText:hover {
   box-shadow: 2px 3px 4px -1px rgba(0, 0, 0, 0.44);
   transition: 200ms;
 }
 
+.iconContainer {
+  /* border: 1px solid black; */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delIcon {
+  text-align: center;
+  padding: 4px 10px;
+  margin: 0 10px;
+  background-color: rgb(255, 76, 76);
+  border-radius: 5px;
+}
+
+.delIcon:hover {
+  box-shadow: 2px 3px 4px -1px rgba(0, 0, 0, 0.44);
+  transition: 200ms;
+  cursor: pointer;
+}
+
+.editIcon {
+  text-align: center;
+  padding: 7px 10px;
+  margin: 0px 10px;
+  margin-top: 3px;
+  background-color: rgb(173, 173, 173);
+  border-radius: 5px;
+}
+
+.editIcon:hover {
+  box-shadow: 2px 3px 4px -1px rgba(0, 0, 0, 0.44);
+  transition: 200ms;
+  cursor: pointer;
+}
+
 .blogContainer {
   display: flex;
+  position: relative;
   /* border: 1px solid black; */
   justify-content: center;
   align-items: center;
@@ -50,6 +89,11 @@
   height: 20%;
   /* border: 1px solid black; */
   margin: 10px 0px;
+}
+
+.checkStyle {
+  position: absolute;
+  left: 23%;
 }
 
 .eachBlog:hover {
