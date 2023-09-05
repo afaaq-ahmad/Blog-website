@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "./navbarStyle.css";
 import logo from "../../images/logo-no-background.png";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -22,14 +23,23 @@ const Navbar = () => {
 
         <div className="rightSideNavbar">
           {isLoginPage?.length > 0 && (
-            <div
-              className="navbarPageLinks"
+            // <div
+            //   className="navbarPageLinks"
+            //   onClick={() => {
+            //     navigate(`/search`);
+            //   }}
+            // >
+            //   Search
+            // </div>
+            <SearchIcon
+              sx={{
+                color: "white",
+                cursor: "pointer",
+              }}
               onClick={() => {
                 navigate(`/search`);
               }}
-            >
-              Search
-            </div>
+            />
           )}
           {isLoginPage?.length > 0 && (
             <div

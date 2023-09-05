@@ -53,6 +53,7 @@ function Signin() {
         if (checkData?.data[0]?.password === userDetail?.password) {
           localStorage.setItem("login-user", checkData?.data[0]?.email);
           localStorage.setItem("user-id", checkData?.data[0]?.id);
+
           navigate("/blogs");
           ToastrSuccess({ successMessage: "Signed In!" });
         } else {

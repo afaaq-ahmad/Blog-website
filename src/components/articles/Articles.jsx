@@ -1,30 +1,31 @@
-import { useNavigate } from "react-router-dom";
-import Loader from "../components/loader/Loader";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "toastr/build/toastr.min.css";
-import styles from "./home.module.css";
-import ToastrError from "../components/common/ToastrError";
+import { Link } from "react-router-dom";
+import styles from "./articleStyle.module.css";
+import ToastrError from "../common/ToastrError";
+import Loader from "../loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getBlogList,
-  selectBlogList,
-  deleteBlogFromStore,
-} from "../components/common/listSlice";
+  getArticleList,
+  selectArticleList,
+  deleteArticleFromStore,
+} from "../common/listSlice";
 import { Button } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import Checkbox from "@mui/material/Checkbox";
 
-const Home = () => {
-  const navigate = useNavigate();
+const Articles = () => {
   const [isLoading, setIsLoading] = useState();
   const dispatch = useDispatch();
-  const blogs = useSelector(selectBlogList);
+  const articles = useSelector(selectArticleList);
+  const navigate = useNavigate();
   const user_ID = localStorage.getItem("user-id");
-  const [checkedBlogs, setCheckedBlogs] = useState([]);
+  const [checkedArticles, setCheckedArticles] = useState([]);
   const checkBoxes = document.getElementsByName("chkbox");
-  const [usersAllBlogs, setUsersAllBlogs] = useState([]);
+  const [usersAllArticles, setUsersAllArticles] = useState([]);
   const [checkboxAll, setCheckboxAll] = useState(false);
   const theme = createTheme({
     palette: {
@@ -34,71 +35,73 @@ const Home = () => {
     },
   });
 
-  const getBlogObj = async () => {
+  const getArticleReq = async () => {
     try {
-      const getBlog = await axios?.get(`http://localhost:3001/blogs/`);
-      dispatch(getBlogList(getBlog?.data));
+      const getArticles = await axios.get(`http://localhost:3001/articles/`);
+      dispatch(getArticleList(getArticles?.data));
     } catch (err) {
       ToastrError({ errorMessage: err.message });
     }
   };
 
-  const getUsersAllBlogs = () => {
+  const getUsersAllArticles = () => {
     const arr = [];
-    blogs?.map((blog) => {
-      if (user_ID === blog?.userID) {
-        arr.push(blog?.id);
+    articles?.map((article) => {
+      if (user_ID === article?.userID) {
+        arr.push(article?.id);
       }
     });
-    setUsersAllBlogs(arr);
+    setUsersAllArticles(arr);
   };
 
   useEffect(() => {
-    setIsLoading(false);
-    getBlogObj();
+    setIsLoading(true);
+    getArticleReq();
     setTimeout(() => {
-      setIsLoading(true);
+      setIsLoading(false);
     }, 500);
   }, []);
 
   useEffect(() => {
-    getUsersAllBlogs();
-  }, [blogs]);
+    getUsersAllArticles();
+  }, [articles]);
 
-  const handleCheckboxes = (event, value) => {
+  const handleCheckbox = (event, value) => {
     event.stopPropagation();
-    const arr = [...checkedBlogs];
-    if (!!checkedBlogs?.includes(value)) {
-      let index = checkedBlogs?.indexOf(value);
+    const arr = [...checkedArticles];
+    if (!!checkedArticles?.includes(value)) {
+      let index = checkedArticles?.indexOf(value);
       arr?.splice(index, 1);
       setCheckboxAll(false);
     } else {
       arr?.push(value);
 
-      if (usersAllBlogs?.length === arr?.length) {
+      if (usersAllArticles?.length === arr?.length) {
         setCheckboxAll(true);
       }
     }
 
-    setCheckedBlogs(arr);
+    setCheckedArticles(arr);
   };
 
-  const deleteBlogs = () => {
-    checkBoxes[0].checked = false;
-    const delABlog = async (index) => {
+  const deleteArticles = () => {
+    checkBoxes[0] = false;
+    const tempArr = [];
+    const delAnArticle = async (index) => {
       try {
-        const del = await axios.delete(`http://localhost:3001/blogs/${index}`);
-        if (del.status === 200) {
-          dispatch(deleteBlogFromStore(index));
-        }
+        const isDeleted = await axios?.delete(
+          `http://localhost:3001/articles/${index}`
+        );
+        isDeleted.status === 200 && dispatch(deleteArticleFromStore(index));
       } catch (err) {
         ToastrError({ errorMessage: err?.message });
       }
     };
-    checkedBlogs?.map((blogId) => {
-      delABlog(blogId);
+
+    checkedArticles?.map((articleID) => {
+      delAnArticle(articleID);
     });
-    setCheckedBlogs([]);
+    setCheckedArticles([]);
   };
 
   const selectAll = () => {
@@ -108,42 +111,42 @@ const Home = () => {
         checkBoxes[i].checked = true;
       }
       const arr = [];
-      setCheckedBlogs([]);
-      blogs?.map((blog) => {
-        if (user_ID === blog?.userID) {
-          arr.push(blog?.id);
+      setCheckedArticles([]);
+      articles?.map((article) => {
+        if (user_ID === article?.userID) {
+          arr.push(article?.id);
         }
       });
-      setCheckedBlogs(arr);
+      setCheckedArticles(arr);
     } else {
       setCheckboxAll(false);
       for (let i = 0; i < checkBoxes?.length; i++) {
         checkBoxes[i].checked = false;
       }
-      setCheckedBlogs([]);
+      setCheckedArticles([]);
     }
   };
 
   return (
     <>
-      {!isLoading ? (
+      {isLoading ? (
         <Loader />
       ) : (
-        <div className={styles?.flexContainer}>
-          <div className={styles?.createBlogDiv}>
+        <div className={styles.flexContainer}>
+          <div className={styles.createArticleDiv}>
             <div className={styles?.iconContainer}>
-              {checkedBlogs?.length > 0 && (
+              {checkedArticles?.length > 0 && (
                 <Button
                   color="error"
                   variant="contained"
                   size="small"
                   style={{ fontSize: "12px", margin: "2px 7px" }}
-                  onClick={() => deleteBlogs()}
+                  onClick={() => deleteArticles()}
                 >
                   Delete
                 </Button>
               )}
-              {checkedBlogs?.length === 1 && (
+              {checkedArticles?.length == 1 && (
                 <Button
                   theme={theme}
                   variant="contained"
@@ -160,15 +163,15 @@ const Home = () => {
                     color: "white",
                   }}
                   onClick={() => {
-                    localStorage.setItem("from blogs", true);
-                    navigate(`/create-blog/${checkedBlogs[0]}`);
+                    localStorage.setItem("from articles", true);
+                    navigate(`/create-article/${checkedArticles[0]}`);
                   }}
                 >
                   Edit
                 </Button>
               )}
             </div>
-            {usersAllBlogs?.length > 0 && (
+            {usersAllArticles?.length > 0 && (
               <Checkbox
                 checked={checkboxAll}
                 name="selectAllCheckBox"
@@ -181,46 +184,46 @@ const Home = () => {
             <div>
               <AddCircleOutlineOutlinedIcon
                 sx={{ fontSize: 40 }}
-                className={styles.createBlogText}
+                className={styles.createArticleText}
                 onClick={() => {
-                  navigate(`/create-blog`);
+                  navigate(`/create-article`);
                 }}
               />
             </div>
           </div>
 
-          {blogs?.length > 0 &&
-            blogs?.map((blog, i) => (
-              <div key={i} className={styles?.blogContainer}>
+          {articles?.length > 0 &&
+            articles?.map((article, i) => (
+              <div key={i} className={styles.articleContainer}>
                 <div
-                  className={styles?.eachBlog}
+                  className={styles.eachArticle}
                   onClick={() => {
-                    localStorage.removeItem("from blogs");
-                    navigate(`/blog/${blog?.id}`);
+                    localStorage.removeItem("from articles");
+                    navigate(`/article/${article?.id}`);
                   }}
                 >
                   <div className={styles?.imageContainer}>
-                    <img src={blog.image} alt="Blog"></img>
-                    {blog?.userID === user_ID && (
+                    <img src={article.image} alt="Article"></img>
+                    {article?.userID === user_ID && (
                       <input
                         type="checkbox"
                         name="chkbox"
                         className={styles?.checkStyle}
-                        onClick={(e) => handleCheckboxes(e, blog?.id)}
+                        onClick={(e) => handleCheckbox(e, article?.id)}
                       />
                     )}
                   </div>
-                  <div className={styles?.blogTitleContainer}>
-                    <div className={styles?.blogTitle}>
-                      {blog.title.length < 40
-                        ? blog.title
-                        : blog.title.slice(0, 35) + "..."}
+                  <div className={styles.articleTitleContainer}>
+                    <div className={styles.blogTitle}>
+                      {article?.title?.length < 40
+                        ? article?.title
+                        : article?.title.slice(0, 35) + "..."}
                     </div>
-                    <div className={styles?.dateStyle}>{blog?.date}</div>
+                    <div className={styles.dateStyle}>{article?.date}</div>
                     <div className={styles.descStyle}>
-                      {blog?.description?.length < 400
-                        ? blog?.description
-                        : blog?.description.slice(0, 400) + "..."}
+                      {article?.description?.length < 400
+                        ? article?.description
+                        : article?.description.slice(0, 400) + "..."}
                     </div>
                   </div>
                 </div>
@@ -232,4 +235,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Articles;

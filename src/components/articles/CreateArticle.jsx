@@ -47,7 +47,11 @@ const CreateArticle = () => {
         articleData.modified_date =
           dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
         await axios.put(`http://localhost:3001/articles/${id}`, articleData);
-        navigate(`/article/${id}`);
+        if (localStorage.getItem("from articles")) {
+          navigate(`/articles`);
+        } else {
+          navigate(`/article/${id}`);
+        }
         ToastrSuccess({ successMessage: "Article updated!" });
       } catch (err) {
         ToastrError({ errorMessage: err.message });

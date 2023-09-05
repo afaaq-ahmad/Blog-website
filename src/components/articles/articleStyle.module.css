@@ -14,31 +14,73 @@
 }
 
 .createArticleDiv {
+  /* border: 1px solid black; */
+  height: 60px;
   display: flex;
   justify-content: right;
   align-items: center;
-  margin-bottom: 20px;
+  margin: 20px 0px;
 }
 
-.createArticleIcon {
+.createArticleText {
   text-align: center;
   text-decoration: none;
-  margin: 30px 50px 0px;
-  padding: 15px 15px;
-  background-color: green;
-  color: white;
+  margin: 2px 50px;
+  padding: 0px;
+  color: rgb(1, 190, 1);
   cursor: pointer;
-  font-weight: 600;
-  border-radius: 5px;
+  border-radius: 50%;
 }
 
-.createArticleIcon:hover {
+.createArticleText:hover {
   box-shadow: 2px 3px 4px -1px rgba(0, 0, 0, 0.44);
   transition: 200ms;
 }
 
+.iconContainer {
+  /* border: 1px solid black; */
+  display: inline-flex;
+  justify-content: right;
+  align-items: center;
+}
+
+.checkboxAllStyle {
+  position: absolute;
+  right: 62%;
+}
+
+.delIcon {
+  text-align: center;
+  padding: 4px 10px;
+  margin: 0 10px;
+  background-color: rgb(168, 26, 26);
+  border-radius: 5px;
+}
+
+.delIcon:hover {
+  box-shadow: 2px 3px 4px -1px rgba(0, 0, 0, 0.44);
+  transition: 200ms;
+  cursor: pointer;
+}
+
+.editIcon {
+  text-align: center;
+  padding: 7px 10px;
+  margin: 0px 10px;
+  margin-top: 3px;
+  background-color: rgb(173, 173, 173);
+  border-radius: 5px;
+}
+
+.editIcon:hover {
+  box-shadow: 2px 3px 4px -1px rgba(0, 0, 0, 0.44);
+  transition: 200ms;
+  cursor: pointer;
+}
+
 .articleContainer {
   display: flex;
+  position: relative;
   /* border: 1px solid black; */
   justify-content: center;
   align-items: center;
@@ -52,6 +94,30 @@
   margin: 10px 0px;
 }
 
+.checkStyle {
+  position: absolute;
+  left: 4%;
+  top: 7%;
+  cursor: pointer;
+}
+.imageContainer input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  opacity: 0.7;
+}
+
+.imageContainer input[type="checkbox"]:checked {
+  accent-color: #43e6e0;
+  opacity: 1;
+}
+
+/* .imageContainer input[type="checkbox"]:checked:after {
+  content: "\2713";
+  font-size: 20px;
+  font-weight: 900;
+  color: white;
+} */
+
 .eachArticle:hover {
   background-color: #d8d9da;
   border: 1px solid black;
@@ -62,6 +128,7 @@
 .imageContainer {
   /* border: 1px solid black; */
   display: flex;
+  position: relative;
   align-items: center;
 }
 
@@ -81,7 +148,7 @@
   font-weight: 600;
 }
 
-.articleTitle {
+.ArticleTitle {
   /* border: 1px solid black; */
   margin: 10px 0px;
 }
@@ -95,8 +162,8 @@
 }
 
 .descStyle {
-  text-align: justify;
   /* border: 1px solid black; */
+  text-align: justify;
   height: 100px;
   padding-top: 10px;
   width: 99%;

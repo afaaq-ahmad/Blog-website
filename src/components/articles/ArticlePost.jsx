@@ -5,6 +5,9 @@ import styles from "../blogs/post/postStyle.module.css";
 import Loader from "../loader/Loader";
 import ToastrError from "../common/ToastrError";
 import ToastrSuccess from "../common/ToastrSuccess";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import { createTheme } from "@mui/material";
 
 const ArticlePost = () => {
   const { id } = useParams();
@@ -12,6 +15,14 @@ const ArticlePost = () => {
   const [isLoading, setIsloading] = useState(false);
   const navigate = useNavigate();
   const getUserID = localStorage.getItem("user-id");
+
+  const theme = createTheme({
+    palette: {
+      editColor: {
+        main: "rgb(150,150,150)",
+      },
+    },
+  });
 
   const getReq = async () => {
     try {
@@ -24,7 +35,7 @@ const ArticlePost = () => {
     }
   };
 
-  const deleteThis = async () => {
+  const deleteArticle = async () => {
     try {
       await axios.delete(
         `http://localhost:3001/articles/${articlePostData?.id}`
@@ -77,7 +88,7 @@ const ArticlePost = () => {
           {articlePostData?.userID == getUserID && !!articlePostData?.title && (
             <div className={styles.buttonContainer}>
               <div className={styles.buttons}>
-                <div
+                {/* <div
                   className={styles.delete}
                   onClick={() => {
                     deleteThis();
@@ -92,7 +103,42 @@ const ArticlePost = () => {
                   }}
                 >
                   Edit
-                </div>
+                </div> */}
+                <DeleteIcon
+                  sx={{
+                    ":hover": {
+                      transition: "200ms",
+                      color: "rgb(168, 26, 26)",
+                    },
+                    cursor: "pointer",
+                  }}
+                  style={{
+                    fontSize: "35px",
+                    margin: "2px 10px",
+                  }}
+                  onClick={() => {
+                    deleteArticle();
+                  }}
+                />
+
+                <EditNoteIcon
+                  theme={theme}
+                  color="editColor"
+                  sx={{
+                    ":hover": {
+                      transition: "200ms",
+                      color: "rgb(100,100,100)",
+                    },
+                    cursor: "pointer",
+                  }}
+                  style={{
+                    fontSize: "35px",
+                    margin: "2px 10px",
+                  }}
+                  onClick={() => {
+                    navigate(`/create-article/${articlePostData?.id}`);
+                  }}
+                />
               </div>
             </div>
           )}

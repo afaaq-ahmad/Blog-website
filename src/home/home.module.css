@@ -25,13 +25,11 @@
 .createBlogText {
   text-align: center;
   text-decoration: none;
-  margin: 30px 50px 0px;
-  padding: 15px 15px;
-  background-color: green;
-  color: white;
+  margin: 2px 50px;
+  padding: 0px;
+  color: rgb(1, 190, 1);
   cursor: pointer;
-  font-weight: 600;
-  border-radius: 5px;
+  border-radius: 50%;
 }
 
 .createBlogText:hover {
@@ -42,8 +40,13 @@
 .iconContainer {
   /* border: 1px solid black; */
   display: inline-flex;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
+}
+
+.checkboxAllStyle {
+  position: absolute;
+  right: 62%;
 }
 
 .delIcon {
@@ -93,8 +96,27 @@
 
 .checkStyle {
   position: absolute;
-  left: 23%;
+  left: 4%;
+  top: 7%;
+  cursor: pointer;
 }
+.imageContainer input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  opacity: 0.7;
+}
+
+.imageContainer input[type="checkbox"]:checked {
+  accent-color: #43e6e0;
+  opacity: 1;
+}
+
+/* .imageContainer input[type="checkbox"]:checked:after {
+  content: "\2713";
+  font-size: 20px;
+  font-weight: 900;
+  color: white;
+} */
 
 .eachBlog:hover {
   background-color: #d8d9da;
@@ -106,6 +128,7 @@
 .imageContainer {
   /* border: 1px solid black; */
   display: flex;
+  position: relative;
   align-items: center;
 }
 

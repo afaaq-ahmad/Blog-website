@@ -5,6 +5,9 @@ import styles from "./postStyle.module.css";
 import Loader from "../../loader/Loader";
 import ToastrError from "../../common/ToastrError";
 import ToastrSuccess from "../../common/ToastrSuccess";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import { createTheme } from "@mui/material/styles";
 
 const Post = () => {
   const { id } = useParams();
@@ -12,6 +15,14 @@ const Post = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const getUserID = localStorage.getItem("user-id");
+
+  const theme = createTheme({
+    palette: {
+      editColor: {
+        main: "rgb(150,150,150)",
+      },
+    },
+  });
 
   const getReq = async () => {
     try {
@@ -77,22 +88,42 @@ const Post = () => {
           {blogPostData?.userID == getUserID && blogPostData?.title && (
             <div className={styles.buttonContainer}>
               <div className={styles.buttons}>
-                <div
-                  className={styles.delete}
+                <DeleteIcon
+                  color="error"
+                  sx={{
+                    ":hover": {
+                      transition: "200ms",
+                      color: "rgb(168, 26, 26)",
+                    },
+                    cursor: "pointer",
+                  }}
+                  style={{
+                    fontSize: "35px",
+                    margin: "2px 10px",
+                  }}
                   onClick={() => {
                     deleteBlog();
                   }}
-                >
-                  Delete
-                </div>
-                <div
-                  className={styles.edit}
+                />
+
+                <EditNoteIcon
+                  theme={theme}
+                  color="editColor"
+                  sx={{
+                    ":hover": {
+                      transition: "200ms",
+                      color: "rgb(100,100,100)",
+                    },
+                    cursor: "pointer",
+                  }}
+                  style={{
+                    fontSize: "35px",
+                    margin: "2px 10px",
+                  }}
                   onClick={() => {
                     navigate(`/create-blog/${blogPostData?.id}`);
                   }}
-                >
-                  Edit
-                </div>
+                />
               </div>
             </div>
           )}
