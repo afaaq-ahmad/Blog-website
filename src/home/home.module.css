@@ -119,7 +119,7 @@
 } */
 
 .eachBlog:hover {
-  background-color: #d8d9da;
+  background-color: #738291;
   border: 1px solid black;
   transition: 150ms ease-in-out;
   cursor: pointer;
@@ -140,7 +140,7 @@
 }
 
 .blogTitleContainer {
-  color: black;
+  /* color: black; */
   /* border: 1px solid black; */
   width: 100%;
   margin: 5px 15px;

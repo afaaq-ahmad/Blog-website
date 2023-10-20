@@ -36,8 +36,8 @@ const Home = () => {
 
   const getBlogObj = async () => {
     try {
-      const getBlog = await axios?.get(`http://localhost:3001/blogs/`);
-      dispatch(getBlogList(getBlog?.data));
+      const getBlogs = await axios?.get(`http://localhost:3005/blogs/`);
+      dispatch(getBlogList(getBlogs?.data));
     } catch (err) {
       ToastrError({ errorMessage: err.message });
     }
@@ -84,7 +84,7 @@ const Home = () => {
   };
 
   const deleteBlogs = () => {
-    checkBoxes[0].checked = false;
+    checkBoxes[checkBoxes?.length - 1].checked = false;
     const delABlog = async (index) => {
       try {
         const del = await axios.delete(`http://localhost:3001/blogs/${index}`);
@@ -123,7 +123,6 @@ const Home = () => {
       setCheckedBlogs([]);
     }
   };
-
   return (
     <>
       {!isLoading ? (

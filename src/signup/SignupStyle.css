@@ -94,7 +94,8 @@ body {
 
 .invalidMessage {
   text-align: left;
-  margin-left: 115px;
+  margin-left: 5px;
+  width: 90%;
   color: red;
   font-style: italic;
   margin-top: 3px;

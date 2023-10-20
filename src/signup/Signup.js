@@ -1,14 +1,14 @@
-import { useDebugValue, useState } from "react";
+import { useDebugValue, useEffect, useState } from "react";
 import "./SignupStyle.css";
 import profile from "../images/add_3971443.png";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import ToastrSuccess from "../components/common/ToastrSuccess";
 import ToastrError from "../components/common/ToastrError";
 
 function Signup() {
   const [error, setError] = useState({});
   const navigate = useNavigate();
+  const [emailExist, setEmailExist] = useState(null);
   const [userDetail, setUserDetail] = useState({
     firstName: "",
     lastName: "",
@@ -58,26 +58,47 @@ function Signup() {
 
   const postReq = async () => {
     try {
-      const checkEmail = await axios?.get(
-        `http://localhost:3001/userdetail?email=${userDetail?.email}`
+      const response = await fetch(
+        `http://localhost:3005/userexist/${userDetail?.email}`
       );
-      if (checkEmail?.data?.length === 0) {
-        await axios?.post(`http://localhost:3001/userdetail/`, userDetail);
-        ToastrSuccess({ successMessage: "Account Created!" });
-      } else {
-        alert("Email already exist");
-      }
+
+      response.json().then((res) => {
+        if (res.length > 0) {
+          setEmailExist(true);
+        } else {
+          setEmailExist(false);
+        }
+      });
     } catch (err) {
       ToastrError({ errorMessage: err.message });
     }
   };
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    if (emailExist === false) {
+      try {
+        fetch("http://localhost:3005/createuser/", {
+          method: `POST`,
+          headers: {
+            "content-Type": "application/json",
+          },
+          body: JSON.stringify({ userDetail }),
+        });
+        ToastrSuccess({ successMessage: "User created!" });
+        navigate("/signin");
+      } catch (err) {
+        ToastrError({ errorMessage: err?.message });
+      }
+    } else if (emailExist === true) {
+      ToastrError({ errorMessage: "user already exist" });
+    }
+  }, [emailExist]);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const check = isValid();
     if (!!check) {
       postReq();
-      navigate("/signin");
     }
   };
 
@@ -176,7 +197,9 @@ function Signup() {
               />
             </div>
 
-            {error?.age && <div className="invalidMessage">{error?.age}</div>}
+            {error?.age && (
+              <div className="invalidMessage">{error?.password}</div>
+            )}
 
             <div className="buttonContainer">
               <input type="submit" />

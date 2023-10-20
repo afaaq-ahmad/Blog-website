@@ -55,8 +55,6 @@ const Post = () => {
     }, 1000);
   }, [id]);
 
-  console.log(blogPostData);
-
   return (
     <>
       {isLoading ? (

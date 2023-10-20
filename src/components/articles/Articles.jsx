@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "toastr/build/toastr.min.css";
-import { Link } from "react-router-dom";
 import styles from "./articleStyle.module.css";
 import ToastrError from "../common/ToastrError";
 import Loader from "../loader/Loader";
@@ -85,14 +84,15 @@ const Articles = () => {
   };
 
   const deleteArticles = () => {
-    checkBoxes[0] = false;
-    const tempArr = [];
+    checkBoxes[checkBoxes?.length - 1].checked = false;
     const delAnArticle = async (index) => {
       try {
         const isDeleted = await axios?.delete(
           `http://localhost:3001/articles/${index}`
         );
-        isDeleted.status === 200 && dispatch(deleteArticleFromStore(index));
+        if (isDeleted.status === 200) {
+          dispatch(deleteArticleFromStore(index));
+        }
       } catch (err) {
         ToastrError({ errorMessage: err?.message });
       }

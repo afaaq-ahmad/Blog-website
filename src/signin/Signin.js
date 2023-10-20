@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../signup/SignupStyle.css";
 import addProfile from "../images/user_848043.png";
-import axios from "axios";
 import ToastrSuccess from "../components/common/ToastrSuccess";
 import ToastrError from "../components/common/ToastrError";
 
@@ -45,23 +44,23 @@ function Signin() {
 
   const isExist = async () => {
     try {
-      const checkData = await axios.get(
-        `http://localhost:3001/userdetail?email=${userDetail.email}`
+      const response = await fetch(
+        `http://localhost:3005/userexist/${userDetail?.email}`
       );
-
-      if (checkData?.data[0]?.email === userDetail?.email) {
-        if (checkData?.data[0]?.password === userDetail?.password) {
-          localStorage.setItem("login-user", checkData?.data[0]?.email);
-          localStorage.setItem("user-id", checkData?.data[0]?.id);
-
-          navigate("/blogs");
-          ToastrSuccess({ successMessage: "Signed In!" });
+      response.json().then((res) => {
+        if (res[0]?.email === userDetail?.email) {
+          if (res[0]?.password === userDetail?.password) {
+            localStorage.setItem("login-user", res[0]?.email);
+            localStorage.setItem("user-id", res[0]?.id);
+            ToastrSuccess({ successMessage: "Logged in!" });
+            navigate(`/blogs`);
+          } else {
+            ToastrError({ errorMessage: "Incorrect Password!" });
+          }
         } else {
-          window.alert("Incorrect password");
+          ToastrError({ errorMessage: "User Not Exist!" });
         }
-      } else {
-        window.alert("user not exist");
-      }
+      });
     } catch (err) {
       ToastrError({ errorMessage: err.message });
     }

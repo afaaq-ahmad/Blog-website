@@ -2,13 +2,20 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const listSlice = createSlice({
   name: "lists",
-  initialState: { blogs: [], articles: [] },
+  initialState: { blogs: [], articles: [], isDark: false, imageTitle: "" },
   reducers: {
     getBlogList: (state, action) => {
       state.blogs = action?.payload;
     },
     getArticleList: (state, action) => {
       state.articles = action?.payload;
+    },
+    changeTheme: (state) => {
+      if (!!state?.isDark) {
+        state.isDark = false;
+      } else {
+        state.isDark = true;
+      }
     },
     deleteBlogFromStore: (state, action) => {
       state?.blogs?.splice(
@@ -30,6 +37,7 @@ export const {
   getArticleList,
   deleteBlogFromStore,
   deleteArticleFromStore,
+  changeTheme,
 } = listSlice?.actions;
 
 export const selectBlogList = (state) => {
@@ -38,6 +46,10 @@ export const selectBlogList = (state) => {
 
 export const selectArticleList = (state) => {
   return state?.lists?.articles;
+};
+
+export const selectChangeTheme = (state) => {
+  return state?.lists?.isDark;
 };
 
 export default listSlice?.reducer;

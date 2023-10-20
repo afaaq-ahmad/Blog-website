@@ -11,21 +11,25 @@ const CreateBlog = () => {
   const [error, setError] = useState({});
   const navigate = useNavigate();
   const user_ID = localStorage.getItem("user-id");
-
-  const [blogData, setBlogData] = useState({
-    title: "",
-    description: "",
-    date: "",
-    modified_date: "",
-    author: "",
-    image: "",
-    userID: user_ID,
-  });
+  const [imagePreview, setPreviewImage] = useState(null);
+  const [blogData, setBlogData] = useState([
+    {
+      title: "",
+      description: "",
+      date: "",
+      modified_date: "",
+      author: "",
+      image: null,
+      image_name: "",
+      previousImage: undefined,
+      userID: user_ID,
+    },
+  ]);
 
   const getBlogContent = async () => {
     try {
       const getReqToUpdate = await axios.get(
-        `http://localhost:3001/blogs/${id}`
+        `http://localhost:3005/createblog/${id}`
       );
       setBlogData(getReqToUpdate?.data);
     } catch (err) {
@@ -39,14 +43,18 @@ const CreateBlog = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    setPreviewImage(blogData[0].image);
+  }, [blogData]);
+
   const postBlog = async () => {
     let dt = new Date();
 
     if (!!id) {
       try {
-        blogData.modified_date =
+        blogData[0].modified_date =
           dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
-        await axios.put(`http://localhost:3001/blogs/${id}`, blogData);
+        await axios.put(`http://localhost:3005/createblog/${id}`, blogData[0]);
         if (localStorage.getItem("from blogs")) {
           navigate(`/blogs`);
         } else {
@@ -60,9 +68,9 @@ const CreateBlog = () => {
     } else {
       setBlogData((values) => ({ ...values, userID: user_ID }));
       try {
-        blogData.date =
+        blogData[0].date =
           dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
-        await axios.post(`http://localhost:3001/blogs/`, blogData);
+        await axios.post(`http://localhost:3005/createblog`, blogData[0]);
         navigate(`/blogs`);
         ToastrSuccess({ successMessage: "Blog Created!" });
       } catch (err) {
@@ -92,14 +100,40 @@ const CreateBlog = () => {
   };
 
   const handleChangeBlog = (name, value) => {
-    setBlogData((values) => ({ ...values, [name]: value }));
+    setBlogData((state) => {
+      const newState = state[0];
+      newState[name] = value;
+
+      return [{ ...newState }];
+    });
   };
 
   const checkImage = (val) => {
+    if (!!id && typeof blogData[0].previousImage === "undefined") {
+      console.log("coming");
+      setBlogData((values) => {
+        const newState = values[0];
+        newState["previousImage"] = blogData[0].image;
+        return [{ ...newState }];
+      });
+    }
     const reader = new FileReader();
     reader.readAsDataURL(val);
+    console.log("image file", val);
+
+    setBlogData((values) => {
+      const newState = values[0];
+      newState["image_name"] = val?.name;
+      return [{ ...newState }];
+    });
+
     reader.onload = () => {
-      setBlogData((values) => ({ ...values, image: reader.result }));
+      setPreviewImage(reader?.result);
+      setBlogData((values) => {
+        const newState = values[0];
+        newState["image"] = reader?.result;
+        return [{ ...newState }];
+      });
     };
   };
 
@@ -108,7 +142,8 @@ const CreateBlog = () => {
       postBlog();
     }
   };
-
+  console.log("blog data", blogData);
+  console.log("id ", id);
   return (
     <>
       <h1 className="createBlogTitle">Enter blog details</h1>
@@ -118,20 +153,20 @@ const CreateBlog = () => {
           type="text"
           placeholder="Title"
           className="blog_input"
-          value={blogData?.title}
+          value={blogData[0]?.title}
           onChange={(e) => {
             handleChangeBlog("title", e?.target?.value);
           }}
         />
 
         {error?.title && (
-          <div className="invalidMessageBlog ">{error?.title}</div>
+          <div className="invalidMessageBlog">{error?.title}</div>
         )}
         <textarea
           placeholder="Enter Description"
           rows={10}
           className="blog_textarea"
-          value={blogData?.description}
+          value={blogData[0]?.description}
           onChange={(e) => {
             handleChangeBlog("description", e?.target?.value);
           }}
@@ -146,12 +181,14 @@ const CreateBlog = () => {
             type="file"
             accept="image/png, image/jpeg"
             className="uploadFileItem"
+            name="myFile"
+            title={blogData[0]?.image_name}
             onChange={(e) => {
               checkImage(e.target.files[0]);
             }}
           />
           <div className="imagePreview">
-            <img src={blogData?.image}></img>
+            <img src={imagePreview}></img>
           </div>
         </div>
 
@@ -162,7 +199,7 @@ const CreateBlog = () => {
         <input
           type="text"
           placeholder="Author"
-          value={blogData?.author}
+          value={blogData[0]?.author}
           className="blog_input"
           onChange={(e) => {
             handleChangeBlog("author", e?.target?.value);
